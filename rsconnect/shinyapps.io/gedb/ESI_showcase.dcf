@@ -1,0 +1,13 @@
+name: ESI_showcase
+title: ESI_showcase
+username: gedb
+account: gedb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 9741170
+bundleId: 7799999
+url: https://gedb.shinyapps.io/ESI_showcase/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: app_improve_mobile.R|data/esi_tool_sample_full.csv|Land_ESI_coefficients.csv|NLu_2022-Oct-14.asc|Water_ESI_coefficients.csv|www/_w_c7631776/ESI-A tool to better capture corporate and investment impacts on the Earth system_web.pdf|www/Brief 1 thumbnail.png|www/ESI - A tool to better capture corporate and investment impacts on the Earth system_v1.1.pdf
