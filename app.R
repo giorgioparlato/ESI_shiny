@@ -9,8 +9,11 @@ library(shinyWidgets)
 library(bslib)
 library(plotly)
 
-## 
+## USER Interface section
+
 ui <- page_navbar(title = HTML("<b>ESI prototype showcase</b>"), theme = bs_theme(bootswatch = "united",  font = font_google("Lato"), primary = "#E68059"),
+                  
+## CSS Code additions (google analytics, plus style changes)
                   tags$head(tags$script(
                     HTML(
                       "<!-- Google tag (gtag.js) -->
@@ -30,6 +33,10 @@ ui <- page_navbar(title = HTML("<b>ESI prototype showcase</b>"), theme = bs_them
                     left: calc(6%);
                     padding: 0 50px 0 50px;
                     border: 1px solid red;}
+                    
+                          .navbar-nav > li > a.nav-link {
+        margin-right: 1px; /* Adjust spacing as needed */
+      }
                     
                     .navbar-default {
                     font-family: 'Lato';
@@ -80,7 +87,8 @@ ui <- page_navbar(title = HTML("<b>ESI prototype showcase</b>"), theme = bs_them
 "
                                   
                   ))),
-                  ## MAIN NAVBAR
+## MAIN NAVBAR CONTENT
+### PANEL 1 - ABOUT
                   bslib::nav_panel("About",
                                    h3("The Earth System Impact tool – some key facts and disclaimers"),
                                    h5("This web page showcases the prototype Earth System Impact (ESI) score."),
@@ -96,7 +104,8 @@ ui <- page_navbar(title = HTML("<b>ESI prototype showcase</b>"), theme = bs_them
                                    br(),
                                    img(src='ESi_interactions_5.png', align = "center", width = "50%"),
                                    p(strong("Disclaimer", style="font-size: 20px;"), br(strong("This tool is currently a prototype. We advise caution when interpreting its results and it should not be used to replace regulatory requirements. Given its focus on planetary-scale impacts it also does not replace assessments of local environmental impacts, such as pollution or biodiversity impacts.")))),
-                  bslib::nav_panel("Tool",
+### PANEL 2 - TOOL
+                  bslib::nav_panel("Tool", 
                                    ## TOOL PAGE
                                    page_sidebar(
                                      sidebar = sidebar(width = "30%",
@@ -139,7 +148,26 @@ ui <- page_navbar(title = HTML("<b>ESI prototype showcase</b>"), theme = bs_them
                                           checkboxInput(inputId = "show_carbon_emissions", label = "Show/Hide Carbon Emissions Line", value = FALSE),
                                           plotOutput("esi_breakdown_plot", height = "50%"),
                                           strong("Disclaimer: This tool is currently a prototype. We advise caution when interpreting its results and it should not be used to replace regulatory requirements. Given its focus on planetary-scale impacts it also does not replace assessments of local environmental impacts, such as pollution or biodiversity impacts."))  # Output the plot using plotOutput
-                                   )))
+                                   )),
+### PANEL 3 - Downloads
+bslib::nav_panel("Downloads",
+                 h5("On this page you can download the prototype tool in Excel format, and the accompanying user manual"),
+                 p("The ESI Excel tool allows companies and investors to test the ESI metric using their own data, and gain further insights into the planetary-scale environmental impact of their activities."),
+                p(strong("Please note that this tool is currently a prototype. We advise caution when interpreting its results, and it should not be used to replace regulatory requirements. Given its focus on planetary-scale impacts, it also does not replace assessments of local environmental impacts, such as pollution or biodiversity impacts.")),
+                 p("You can download the zip file containing both the Excel tool and", a("the user manual", href = "ESI_tool_guidance_v3.2.pdf", target = "_blank"), "by clicking on the button below."),
+                 tags$div(
+                   style = "text-align: center;", 
+                   tags$a(
+                   class = "btn btn-primary", 
+                   href = "ESI_excel.zip",  # The file should be located in the 'www' directory of your Shiny app
+                   download = "ESI_excel.zip",  # This suggests the filename to save as. It doesn't need to match the file on the server
+                   role = "button",
+                   style = "width: 200px;",
+                   "Download Data"  # The button text
+                 ))
+
+
+))
 
 server <- function(input, output, session) {
   Water_ESI_coefficients <- as.tibble(read_csv("data/Water_ESI_coefficients.csv"))
