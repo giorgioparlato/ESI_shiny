@@ -23,6 +23,7 @@ ui <- page_navbar(title = "ESI prototype showcase", theme = bs_theme(bootswatch 
                     )
                   ),
                   tags$style(HTML("
+                  * {font-family: 'Lato'};
                     .shiny-notification {position:fixed;
                     top: calc(70%);
                     left: calc(6%);
