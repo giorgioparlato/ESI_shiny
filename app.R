@@ -9,10 +9,11 @@ library(shinyWidgets)
 library(bslib)
 library(plotly)
 
-ui <- page_navbar(title = "ESI prototype showcase", theme = bs_theme(bootswatch = "united"),
+## 
+ui <- page_navbar(title = HTML("<b>ESI prototype showcase</b>"), theme = bs_theme(bootswatch = "united",  font = font_google("Lato"), primary = "#E68059"),
                   tags$head(tags$script(
                     HTML(
-                        "<!-- Google tag (gtag.js) -->
+                      "<!-- Google tag (gtag.js) -->
                         <script async src='https://www.googletagmanager.com/gtag/js?id=G-20QL733ETT'></script>
                         <script>
                         window.dataLayer = window.dataLayer || [];
@@ -31,8 +32,12 @@ ui <- page_navbar(title = "ESI prototype showcase", theme = bs_theme(bootswatch 
                     border: 1px solid red;}
                     
                     .navbar-default {
+                    font-family: 'Lato';
                     background-color: #E78059 !important;
                     border-color: #E78059;}
+                    
+                    .navbar-brand {
+                    font-family: 'Lato';}
                     
                     .nav-link, .nav-tabs>li>a, .nav-pills>li>a, ul.nav.navbar-nav>li>a {
                     font-size: 1.25rem}
@@ -73,9 +78,9 @@ ui <- page_navbar(title = "ESI prototype showcase", theme = bs_theme(bootswatch 
                                     }
 
 "
-
-                                      ))),
-## MAIN NAVBAR
+                                  
+                  ))),
+                  ## MAIN NAVBAR
                   bslib::nav_panel("About",
                                    h3("The Earth System Impact tool – some key facts and disclaimers"),
                                    h5("This web page showcases the prototype Earth System Impact (ESI) score."),
@@ -87,54 +92,54 @@ ui <- page_navbar(title = "ESI prototype showcase", theme = bs_theme(bootswatch 
                                        tags$li("Context sensitive: it distinguishes impacts by region and vegetation type"),
                                        tags$li("Science based: it accounts for the current state of each Earth system component relative to scientifically estimated guardrails – i.e. it accounts for total availability")))),
                                    p("For more details on how the prototype was developed see", a("Lade et al. 2021", href= "https://iopscience.iop.org/article/10.1088/1748-9326/ac2db1")),
-                                    p("For a short introduction on ESI see", a("this brief", href = "ESI - A tool to better capture corporate and investment impacts on the Earth system_v1.1.pdf", target = "_blank"), ", and for more information on how it can be applied by corporate actors, banks or other financial institutions see", a("Crona et al. 2023,", href = "https://doi.org/10.1016/j.jclepro.2023.139523"), "which also includes a case study applying the ESI on a sample of mining companies."),
+                                   p("For a short introduction on ESI see", a("this brief", href = "ESI - A tool to better capture corporate and investment impacts on the Earth system_v1.1.pdf", target = "_blank"), ", and for more information on how it can be applied by corporate actors, banks or other financial institutions see", a("Crona et al. 2023,", href = "https://doi.org/10.1016/j.jclepro.2023.139523"), "which also includes a case study applying the ESI on a sample of mining companies."),
                                    br(),
                                    img(src='ESi_interactions_5.png', align = "center", width = "50%"),
                                    p(strong("Disclaimer", style="font-size: 20px;"), br(strong("This tool is currently a prototype. We advise caution when interpreting its results and it should not be used to replace regulatory requirements. Given its focus on planetary-scale impacts it also does not replace assessments of local environmental impacts, such as pollution or biodiversity impacts.")))),
                   bslib::nav_panel("Tool",
-## TOOL PAGE
+                                   ## TOOL PAGE
                                    page_sidebar(
                                      sidebar = sidebar(width = "30%",
                                                        collapse_sidebar = FALSE,
                                                        open = "always",
-##Inner Tabs
+                                                       ##Inner Tabs
                                                        navset_card_tab(
-                                                       nav_panel("Input Data",
-                                                       p("Clear the example data and fill in the information below to calculate the ESI for an asset. You can add more assets and compare their impacts on the Earth System. The bars represent the ESI broken down by each component. You can click on the checkbox above the plot to show/hide the black line representing CO2e emissions (secondary axis) of assets. The assets in the plot are automatically sorted in descending order of CO2e emissions"),
-                                        selectInput(inputId = "region", label = "Region", choices = c(
-                                          "Africa", "Asia", "Australia", "Europe", "Oceania", "North America", "South America"
-                                        )),
-                                        selectInput(inputId = "veg_type", label = "Vegetation Type", choices = c(
-                                          "warm climate grassland", "boreal forest", "cool climate grassland", "temperate forest", "tropical forest"
-                                        )),
-                                        numericInput(inputId = "co2_emissions", label = "CO2e Emissions (tons)", value = ""),
-                                        numericInput(inputId = "land_use", label = "Land Use (km2)", value = ""),
-                                        numericInput(inputId = "water_use", label = "Water Use (thousand m3)", value = ""),
-                                        textInput(inputId = "asset_name", label = "Asset Name", value = "Example Asset 1"),
-                                        actionButton(inputId = "calculate_esi", label = "Calculate ESI for this asset", class="btn btn-primary"),
-                                        actionButton(inputId = "clear_data", label = "Clear Data", class="btn btn-secondary")),
-                                        
-                                        nav_panel("Instructions",
-                                        p("In the input data tab you can insert the data for the assets you want to analyze. The 'clear data' button allows to delete all the input values and start from scratch."),
-                                        h5("Interpreting ESI scores"),
-                                        p("ESI scores are scaled to planetary boundaries. Since any single company will contribute a small fraction of total regional or global impact relative to these boundaries, ESI scores are usually much smaller than
+                                                         nav_panel("Input Data",
+                                                                   p("Clear the example data and fill in the information below to calculate the ESI for an asset. You can add more assets and compare their impacts on the Earth System. The bars represent the ESI broken down by each component. You can click on the checkbox above the plot to show/hide the black line representing CO2e emissions (secondary axis) of assets. The assets in the plot are automatically sorted in descending order of CO2e emissions"),
+                                                                   selectInput(inputId = "region", label = "Region", choices = c(
+                                                                     "Africa", "Asia", "Australia", "Europe", "Oceania", "North America", "South America"
+                                                                   )),
+                                                                   selectInput(inputId = "veg_type", label = "Vegetation Type", choices = c(
+                                                                     "warm climate grassland", "boreal forest", "cool climate grassland", "temperate forest", "tropical forest"
+                                                                   )),
+                                                                   numericInput(inputId = "co2_emissions", label = "CO2e Emissions (tons)", value = ""),
+                                                                   numericInput(inputId = "land_use", label = "Land Use (km2)", value = ""),
+                                                                   numericInput(inputId = "water_use", label = "Water Use (thousand m3)", value = ""),
+                                                                   textInput(inputId = "asset_name", label = "Asset Name", value = "Example Asset 1"),
+                                                                   actionButton(inputId = "calculate_esi", label = "Calculate ESI for this asset", class="btn btn-primary"),
+                                                                   actionButton(inputId = "clear_data", label = "Clear Data", class="btn btn-secondary")),
+                                                         
+                                                         nav_panel("Instructions",
+                                                                   p("In the input data tab you can insert the data for the assets you want to analyze. The 'clear data' button allows to delete all the input values and start from scratch."),
+                                                                   h5("Interpreting ESI scores"),
+                                                                   p("ESI scores are scaled to planetary boundaries. Since any single company will contribute a small fraction of total regional or global impact relative to these boundaries, ESI scores are usually much smaller than
 1. This small number, however, does not represent negligible impact."),
-                                        h5("Errors and clearing data"),
-                                        p("Note that there are some combinations of region and vegetation type for which there is no value. If you select one of those combinations you will receive an error message, and will need to 'clear data' to start again. The missing combinations are the following:"),
-                                        tags$div(tags$ul(
-                                          tags$li("boreal forest AND one of the following"),
-                                          tags$ul(tags$li("Australia, Oceania, South America, Africa")),
-                                          tags$li("Oceania AND warm OR cool climate grasslands"),
-                                          tags$li("Europe AND cool climate grasslands OR tropical forest"))),
-                                        p("If you encounter any other issues feel free to reach out to giorgio.parlato(at)kva.se")))),
+                                                                   h5("Errors and clearing data"),
+                                                                   p("Note that there are some combinations of region and vegetation type for which there is no value. If you select one of those combinations you will receive an error message, and will need to 'clear data' to start again. The missing combinations are the following:"),
+                                                                   tags$div(tags$ul(
+                                                                     tags$li("boreal forest AND one of the following"),
+                                                                     tags$ul(tags$li("Australia, Oceania, South America, Africa")),
+                                                                     tags$li("Oceania AND warm OR cool climate grasslands"),
+                                                                     tags$li("Europe AND cool climate grasslands OR tropical forest"))),
+                                                                   p("If you encounter any other issues feel free to reach out to giorgio.parlato(at)su.se")))),
                                      h5("Asset List"),
-                                    column(width = 12, DT::dataTableOutput("esi_output"),style = "height:30%; overflow-y: scroll"),
-                            #DTOutput("esi_output", style = "height:300px; overflow-y: scroll"),
-                            card(card_header("ESI Breakdown"),
-                                 checkboxInput(inputId = "show_carbon_emissions", label = "Show/Hide Carbon Emissions Line", value = FALSE),
-                                 plotOutput("esi_breakdown_plot", height = "50%"),
-                                 strong("Disclaimer: This tool is currently a prototype. We advise caution when interpreting its results and it should not be used to replace regulatory requirements. Given its focus on planetary-scale impacts it also does not replace assessments of local environmental impacts, such as pollution or biodiversity impacts."))  # Output the plot using plotOutput
-                                          )))
+                                     column(width = 12, DT::dataTableOutput("esi_output"),style = "height:30%; overflow-y: scroll"),
+                                     #DTOutput("esi_output", style = "height:300px; overflow-y: scroll"),
+                                     card(card_header("ESI Breakdown"),
+                                          checkboxInput(inputId = "show_carbon_emissions", label = "Show/Hide Carbon Emissions Line", value = FALSE),
+                                          plotOutput("esi_breakdown_plot", height = "50%"),
+                                          strong("Disclaimer: This tool is currently a prototype. We advise caution when interpreting its results and it should not be used to replace regulatory requirements. Given its focus on planetary-scale impacts it also does not replace assessments of local environmental impacts, such as pollution or biodiversity impacts."))  # Output the plot using plotOutput
+                                   )))
 
 server <- function(input, output, session) {
   Water_ESI_coefficients <- as.tibble(read_csv("data/Water_ESI_coefficients.csv"))
@@ -164,26 +169,26 @@ server <- function(input, output, session) {
       # Display an error message using showNotification
       showNotification("Please fill in all required fields.", type = "error")
     } else {
-    
-    updateNumericInput(session, "co2_emissions", value = "")  # Reset CO2 Emissions input
-    updateNumericInput(session, "land_use", value = "")       # Reset Land Use input
-    updateNumericInput(session, "water_use", value = "")      # Reset Water Use input
-    updateTextInput(session, "asset_name", value = "")         # Reset Asset Name input
-    new_asset <- data.frame(
-      AssetName = input$asset_name,
-      Region = input$region,
-      VegType = input$veg_type,
-      CO2Emissions = input$co2_emissions,
-      LandUse = input$land_use,
-      WaterUse = input$water_use
-    )
-    
-    new_asset$Carbon_ESI <- new_asset$CO2Emissions * 2.80E-12
-    new_asset$Land_ESI <- new_asset$LandUse * Land_ESI_matrix[new_asset$Region, new_asset$VegType]
-    new_asset$Water_ESI <- new_asset$WaterUse * Water_ESI_matrix[new_asset$Region, new_asset$VegType]
-    new_asset$Total_ESI <- new_asset$Carbon_ESI + new_asset$Land_ESI + new_asset$Water_ESI
-    
-    assets$data <- rbind(assets$data, new_asset)
+      
+      updateNumericInput(session, "co2_emissions", value = "")  # Reset CO2 Emissions input
+      updateNumericInput(session, "land_use", value = "")       # Reset Land Use input
+      updateNumericInput(session, "water_use", value = "")      # Reset Water Use input
+      updateTextInput(session, "asset_name", value = "")         # Reset Asset Name input
+      new_asset <- data.frame(
+        AssetName = input$asset_name,
+        Region = input$region,
+        VegType = input$veg_type,
+        CO2Emissions = input$co2_emissions,
+        LandUse = input$land_use,
+        WaterUse = input$water_use
+      )
+      
+      new_asset$Carbon_ESI <- new_asset$CO2Emissions * 2.80E-12
+      new_asset$Land_ESI <- new_asset$LandUse * Land_ESI_matrix[new_asset$Region, new_asset$VegType]
+      new_asset$Water_ESI <- new_asset$WaterUse * Water_ESI_matrix[new_asset$Region, new_asset$VegType]
+      new_asset$Total_ESI <- new_asset$Carbon_ESI + new_asset$Land_ESI + new_asset$Water_ESI
+      
+      assets$data <- rbind(assets$data, new_asset)
     }})
   
   esi_formatted <- reactive({
