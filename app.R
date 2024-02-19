@@ -82,7 +82,18 @@ ui <- page_navbar(title = HTML("<b>ESI prototype showcase</b>"), theme = bs_them
                     
                     img[src='ESi_interactions_5.png'] {
                     width: 100% !important;}
-                                    }
+                    }
+                                    
+                    @media (min-width: 768px) {
+        /* Custom CSS to increase padding (side margins) for About and Download nav panels */
+        .nav-content {
+          padding-left: 40px;  /* Increase side margins on the left */
+          padding-right: 40px; /* Increase side margins on the right */
+        }
+                    }
+       @media (min-width: 1200px) {
+       padding-right: 80px; /* Increase the right margin more for large screens */
+        }
 
 "
                                   
@@ -90,6 +101,7 @@ ui <- page_navbar(title = HTML("<b>ESI prototype showcase</b>"), theme = bs_them
 ## MAIN NAVBAR CONTENT
 ### PANEL 1 - ABOUT
                   bslib::nav_panel("About",
+                                   div(class = "nav-content",
                                    h3("The Earth System Impact tool – some key facts and disclaimers"),
                                    h5("This web page showcases the prototype Earth System Impact (ESI) score."),
                                    p("Stability of the Earth’s climate system depends on both reducing GHG emissions while simultaneously bolstering the resilience of key regions (biomes) of the planet. Mitigating severe systemic risks related to climate change and concurrent nature degradation therefore hinges on our ability to rapidly reduce the harm incurred through economic activities."),
@@ -100,10 +112,11 @@ ui <- page_navbar(title = HTML("<b>ESI prototype showcase</b>"), theme = bs_them
                                        tags$li("Context sensitive: it distinguishes impacts by region and vegetation type"),
                                        tags$li("Science based: it accounts for the current state of each Earth system component relative to scientifically estimated guardrails – i.e. it accounts for total availability")))),
                                    p("For more details on how the prototype was developed see", a("Lade et al. 2021", href= "https://iopscience.iop.org/article/10.1088/1748-9326/ac2db1")),
-                                   p("For a short introduction on ESI see", a("this brief", href = "ESI - A tool to better capture corporate and investment impacts on the Earth system_v1.1.pdf", target = "_blank"), ", and for more information on how it can be applied by corporate actors, banks or other financial institutions see", a("Crona et al. 2023,", href = "https://doi.org/10.1016/j.jclepro.2023.139523"), "which also includes a case study applying the ESI on a sample of mining companies."),
+                                   p("For a short introduction on ESI see", a("this brief", href = "https://www.gedb.se/upl/files/194920/esi-a-tool-to-better-capture-corporate-and-investment-impacts-on-the-earth-system-v1-1.pdf", target = "_blank"), ", and for more information on how it can be applied by corporate actors, banks or other financial institutions see", a("Crona et al. 2023,", href = "https://doi.org/10.1016/j.jclepro.2023.139523"), "which also includes a case study applying the ESI on a sample of mining companies."),
                                    br(),
                                    img(src='ESi_interactions_5.png', align = "center", width = "50%"),
-                                   p(strong("Disclaimer", style="font-size: 20px;"), br(strong("This tool is currently a prototype. We advise caution when interpreting its results and it should not be used to replace regulatory requirements. Given its focus on planetary-scale impacts it also does not replace assessments of local environmental impacts, such as pollution or biodiversity impacts.")))),
+                                   p(strong("Disclaimer", style="font-size: 20px;"), br(strong("This tool is currently a prototype. We advise caution when interpreting its results and it should not be used to replace regulatory requirements. Given its focus on planetary-scale impacts it also does not replace assessments of local environmental impacts, such as pollution or biodiversity impacts."
+                                  ))))),
 ### PANEL 2 - TOOL
                   bslib::nav_panel("Tool", 
                                    ## TOOL PAGE
@@ -151,20 +164,24 @@ ui <- page_navbar(title = HTML("<b>ESI prototype showcase</b>"), theme = bs_them
                                    )),
 ### PANEL 3 - Downloads
 bslib::nav_panel("Downloads",
+                 div(class = "nav-content",
                  h5("On this page you can download the prototype tool in Excel format, and the accompanying user manual"),
                  p("The ESI Excel tool allows companies and investors to test the ESI metric using their own data, and gain further insights into the planetary-scale environmental impact of their activities."),
-                p(strong("Please note that this tool is currently a prototype. We advise caution when interpreting its results, and it should not be used to replace regulatory requirements. Given its focus on planetary-scale impacts, it also does not replace assessments of local environmental impacts, such as pollution or biodiversity impacts.")),
-                 p("You can download the zip file containing both the Excel tool and", a("the user manual", href = "ESI_tool_guidance_v3.2.pdf", target = "_blank"), "by clicking on the button below."),
+                p(strong("Please note that the ESI metric is currently a prototype. We advise caution when interpreting its results, and it should not be used to replace regulatory requirements. Given its focus on planetary-scale impacts, it also does not replace assessments of local environmental impacts, such as pollution or biodiversity impacts.")),
+                 p("You can download the zip folder containing both the Excel tool and", a("the user manual", href = "ESI_tool_guidance_v3.2.pdf", target = "_blank"), "by clicking on the button below."),
                  tags$div(
-                   style = "text-align: center;", 
+                   style = "text-align: left;", 
                    tags$a(
                    class = "btn btn-primary", 
-                   href = "ESI_excel.zip",  # The file should be located in the 'www' directory of your Shiny app
-                   download = "ESI_excel.zip",  # This suggests the filename to save as. It doesn't need to match the file on the server
+                   href = "ESI_prototype_tool.v1.zip",  # The file should be located in the 'www' directory of your Shiny app
+                   download = "ESI_prototype_tool.v1.zip",  # This suggests the filename to save as. It doesn't need to match the file on the server
                    role = "button",
                    style = "width: 200px;",
-                   "Download Excel Tool (zip file)"  # The button text
-                 ))
+                   "Download Excel Tool (zip folder)"  # The button text
+                 )),
+                p(strong("DISCLAIMER:"), "This tool is still in first iteration. It is possible that other errors might be encountered, or that the steps suggested above do not help resolve the issue.
+                  In these cases, we would love to hear from you so that we can further improve the tool. Please reach out to giorgio.parlato(at)su.se and explain the issue you are encountering."
+                ))
 
 
 ))
