@@ -168,7 +168,7 @@ bslib::nav_panel("Downloads",
                  h5("On this page you can download the prototype tool in Excel format, and the accompanying user manual"),
                  p("The ESI Excel tool allows companies and investors to test the ESI metric using their own data, and gain further insights into the planetary-scale environmental impact of their activities."),
                 p(strong("Please note that the ESI metric is currently a prototype. We advise caution when interpreting its results, and it should not be used to replace regulatory requirements. Given its focus on planetary-scale impacts, it also does not replace assessments of local environmental impacts, such as pollution or biodiversity impacts.")),
-                 p("You can download the zip folder containing both the Excel tool and", a("the user manual", href = "ESI_tool_guidance_v3.2.pdf", target = "_blank"), "by clicking on the button below."),
+                 p("You can download the zip folder containing both the Excel tool and", a("the user manual", href = "ESI_tool_guidance-comp.pdf", target = "_blank"), "by clicking on the button below."),
                  tags$div(
                    style = "text-align: left;", 
                    tags$a(
