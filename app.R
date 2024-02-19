@@ -179,6 +179,7 @@ bslib::nav_panel("Downloads",
                    style = "width: 200px;",
                    "Download Excel Tool (zip folder)"  # The button text
                  )),
+                br(),
                 p(strong("DISCLAIMER:"), "This tool is still in first iteration. It is possible that other errors might be encountered, or that the steps suggested above do not help resolve the issue.
                   In these cases, we would love to hear from you so that we can further improve the tool. Please reach out to giorgio.parlato(at)su.se and explain the issue you are encountering."
                 ))
