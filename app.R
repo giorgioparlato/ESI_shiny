@@ -163,7 +163,7 @@ bslib::nav_panel("Downloads",
                    download = "ESI_excel.zip",  # This suggests the filename to save as. It doesn't need to match the file on the server
                    role = "button",
                    style = "width: 200px;",
-                   "Download Data"  # The button text
+                   "Download Excel Tool (zip file)"  # The button text
                  ))
 
 
