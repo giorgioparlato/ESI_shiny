@@ -177,8 +177,8 @@ bslib::nav_panel("Downloads",
                    style = "text-align: center;", 
                    tags$a(
                    class = "btn btn-primary", 
-                   href = "ESI_prototype_tool.v1.zip",  # The file should be located in the 'www' directory of your Shiny app
-                   download = "ESI_prototype_tool.v1.zip",  # This suggests the filename to save as. It doesn't need to match the file on the server
+                   href = "ESI_prototype_tool.v1.1.zip",  # The file should be located in the 'www' directory of your Shiny app
+                   download = "ESI_prototype_tool.v1.1.zip",  # This suggests the filename to save as. It doesn't need to match the file on the server
                    role = "button",
                    style = "width: 200px;",
                    "Download Excel Tool (zip folder)"  # The button text
