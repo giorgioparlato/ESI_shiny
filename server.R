@@ -160,7 +160,42 @@ server <- function(input, output, session) {
     
   })
   
+  # Download CSV
+  output$download_csv <- downloadHandler(
+    filename = function() {
+      paste("heatmap_data", Sys.Date(), ".asc", sep = "")
+    },
+    content = function(file) {
+      heatmap_data <- heatmap_data_reactive()
+      esi_raster <- heatmap_data[["ESI"]]
+      terra::writeRaster(esi_raster, file, overwrite = TRUE)
+    }
+  )
+  
+  # Download TIFF
+  output$download_tiff <- downloadHandler(
+    filename = function() {
+      paste("heatmap_data", Sys.Date(), ".tif", sep = "")
+    },
+    content = function(file) {
+      heatmap_data <- heatmap_data_reactive()
+      esi_raster <- heatmap_data[["ESI"]]
+      terra::writeRaster(esi_raster, file, overwrite = TRUE)
+    }
+  )
+  # Download  NETCDF
+  output$download_netcdf <- downloadHandler(
+    filename = function() {
+      paste("heatmap_data", Sys.Date(), ".nc", sep = "")
+    },
+    content = function(file) {
+      # Get the modified heatmap data (raster) being displayed on the map
+      heatmap_data <- heatmap_data_reactive()
+      esi_cdf <- heatmap_data
+      # Write the selected ESI raster to a NetCDF file
+      terra::writeCDF(esi_cdf, file, overwrite = TRUE)
+    }
+  )
   
 }
-
 

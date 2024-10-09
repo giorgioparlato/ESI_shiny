@@ -196,6 +196,11 @@ ui <- page_navbar(title = HTML("ESI prototype tool"), theme = bs_theme(bootswatc
                                                  h5("Total ESI by location (given inputs)"), 
                                                  leafletOutput("world_map_plot"),
                                                  p(),
+                                                 p("With the buttons below you can download the map you produced in one of the following formats."),
+                                                 downloadButton("download_csv", "Download ASC", class="btn btn-primary"),
+                                                 downloadButton("download_tiff", "Download TIFF", class="btn btn-primary"),
+                                                 downloadButton("download_netcdf", "Download NetCDF", class="btn btn-primary"),
+                                                 p("All download formats can be read by GIS applications. ASC files are text files that can also be imported in Excel.")
                                                  hr(),
                                                  p("Notes:"),
                                                  tags$div(tags$ul(
