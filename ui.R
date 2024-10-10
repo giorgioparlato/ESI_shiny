@@ -137,7 +137,7 @@ ui <- page_navbar(title = HTML("ESI prototype tool"), theme = bs_theme(bootswatc
                                                                    p("In the input data tab you can insert the data for the assets you want to analyze. The 'clear data' button allows to delete all the input values and start from scratch."),
                                                                    h5("Interpreting ESI scores"),
                                                                    p("ESI scores are scaled to planetary boundaries. Since any single company will contribute a small fraction of total regional or global impact relative to these boundaries, ESI scores are usually much smaller than
-1. This small number, however, does not represent negligible impact."),
+1. This small number, however, does not represent negligible impact. In this table, to ease understanding and comparison, ESI scores are displayed as ESI x 10^6"),
                                                                    h5("Errors and clearing data"),
                                                                    p("Note that there are some combinations of region and vegetation type for which there is no value. If you select one of those combinations you will receive an error message, and will need to 'clear data' to start again. The missing combinations are the following:"),
                                                                    tags$div(tags$ul(
@@ -146,7 +146,7 @@ ui <- page_navbar(title = HTML("ESI prototype tool"), theme = bs_theme(bootswatc
                                                                      tags$li("Oceania AND warm OR cool climate grasslands"),
                                                                      tags$li("Europe AND cool climate grasslands OR tropical forest"))),
                                                                    p("If you encounter any other issues feel free to reach out to giorgio.parlato(at)su.se")))),
-                                     h5("Asset List"),
+                                     h5("Asset List (ESI scores are displayed as ESI x 10^6)"),
                                      column(width = 12, DT::dataTableOutput("esi_output"),style = "height:30%; overflow-y: scroll"),
                                      #DTOutput("esi_output", style = "height:300px; overflow-y: scroll"),
                                      card(card_header("ESI Breakdown"),
@@ -196,11 +196,12 @@ ui <- page_navbar(title = HTML("ESI prototype tool"), theme = bs_theme(bootswatc
                                                  h5("Total ESI by location (given inputs)"), 
                                                  leafletOutput("world_map_plot"),
                                                  p(),
-                                                 p("With the buttons below you can download the map you produced in one of the following formats."),
+                                                 p("With the buttons below you can download the 'Total ESI' map you produced in one of the following formats."),
                                                  downloadButton("download_csv", "Download ASC", class="btn btn-primary"),
                                                  downloadButton("download_tiff", "Download TIFF", class="btn btn-primary"),
                                                  downloadButton("download_netcdf", "Download NetCDF", class="btn btn-primary"),
-                                                 p("All download formats can be read by GIS applications. ASC files are text files that can also be imported in Excel.")
+                                                 p("All download formats can be read by GIS applications. ASC files are text files that can also be imported in Excel."),
+                                                 p("The NetCDF format includes all four layers (Total ESI, Land ESI, Water ESI, Carbon ESI)"),
                                                  hr(),
                                                  p("Notes:"),
                                                  tags$div(tags$ul(

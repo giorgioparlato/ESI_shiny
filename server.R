@@ -1,18 +1,7 @@
 #Shiny_Leaflet_0.1
 
 server <- function(input, output, session) {
-  Water_ESI_coefficients <- as.tibble(read_csv("data/Water_ESI_coefficients.csv"))
-  Land_ESI_coefficients <- as.tibble(read_csv("data/Land_ESI_coefficients.csv"))
-  Land_ESI_matrix <- Land_ESI_coefficients %>%
-    tibble::column_to_rownames(var = "...1") %>%
-    as.matrix() 
-  Water_ESI_matrix <- Water_ESI_coefficients %>%
-    tibble::column_to_rownames(var = "...1") %>%
-    as.matrix() 
-  
   assets <- reactiveValues(data = data.frame())  # Store user inputs in a reactive data frame
-  
-  initial_data <- as.tibble(read_csv("data/esi_tool_sample.csv"))
   
   assets$data <- initial_data
   
@@ -42,9 +31,9 @@ server <- function(input, output, session) {
         WaterUse = input$water_use
       )
       
-      new_asset$Carbon_ESI <- new_asset$CO2Emissions * 2.80E-12
-      new_asset$Land_ESI <- new_asset$LandUse * Land_ESI_matrix[new_asset$Region, new_asset$VegType]
-      new_asset$Water_ESI <- new_asset$WaterUse * Water_ESI_matrix[new_asset$Region, new_asset$VegType]
+      new_asset$Carbon_ESI <- new_asset$CO2Emissions * 2.80E-12 * 10^6 
+      new_asset$Land_ESI <- new_asset$LandUse * 10^6 * Land_ESI_matrix[new_asset$Region, new_asset$VegType]
+      new_asset$Water_ESI <- new_asset$WaterUse * 10^6 * Water_ESI_matrix[new_asset$Region, new_asset$VegType]
       new_asset$Total_ESI <- new_asset$Carbon_ESI + new_asset$Land_ESI + new_asset$Water_ESI
       
       assets$data <- rbind(assets$data, new_asset)
@@ -107,16 +96,7 @@ server <- function(input, output, session) {
   })
   
   #map
-  ## data for map
-  df_esi_inner <- as_tibble(read_csv("data/df_esi_inner.csv"))
-  r <- rast(df_esi_inner, crs = "EPSG:4326")
-  
-  
-  empty_data <- data.frame(
-    id = character(),
-    value = numeric(),
-    ESI = numeric()
-  )
+
   
   ## event data
   # Reactive expression to generate heatmap data
@@ -125,9 +105,10 @@ server <- function(input, output, session) {
     
     r %>%
       mutate(
-        ESI = 10^6 * ((input$land_use_map * l_esi) +
-                        (input$co2_emissions_map * 2.80E-12) +
-                        (input$water_use_map * w_esi))
+        ESI = 10^6 * ((input$land_use_map * l_esi) + (input$co2_emissions_map * 2.80E-12) + (input$water_use_map * w_esi)),
+        L_ESI = 10^6 * ((input$land_use_map * l_esi)),
+        W_ESI = 10^6 * ((input$water_use_map * w_esi)),
+        C_ESI = 10^6 * ((input$co2_emissions_map * 2.80E-12))
       )
   })
   
@@ -138,6 +119,10 @@ server <- function(input, output, session) {
     
     heatmap_colors <- colorNumeric(c("#BFE499", "#F9DF8B", "#f7b267","#f79d65","#f4845f","#f27059","#f25c54", "#F05C42", "#ED3C1D"), values(heatmap_data$ESI),  na.color = "transparent")
     heatmap_colors2 <- c("#BFE499", "#F9DF8B", "#f7b267","#f79d65","#f4845f","#f27059","#f25c54", "#F05C42", "#ED3C1D")
+    custom_green_colors <- colorNumeric(c("#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#006d2c", "#00441b"), domain = values(heatmap_data$L_ESI),  na.color = "transparent")
+    custom_green_colors2 <- c("#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#006d2c", "#00441b")
+    custom_blue_colors <- colorNumeric(c("#86C5DA", "#5DAFD3", "#349ACD", "#1E80B0", "#17679A", "#115085", "#0B3A6F", "#062659", "#021443"), domain = values(heatmap_data$W_ESI),  na.color = "transparent")
+    custom_blue_colors2 <- c("#86C5DA", "#5DAFD3", "#349ACD", "#1E80B0", "#17679A", "#115085", "#0B3A6F", "#062659", "#021443")
     
     # Check for user inputs
     if (input$co2_emissions_map == 0 && input$land_use_map == 0 && input$water_use_map == 0) 
@@ -153,8 +138,17 @@ server <- function(input, output, session) {
       {
       # Map with data when inputs are provided
       leaflet(heatmap_data) %>% addTiles() %>%
-        addRasterImage(heatmap_data$ESI, colors = heatmap_colors2, opacity = 0.8) %>%
+        addRasterImage(heatmap_data$ESI, colors = heatmap_colors2, opacity = 0.8, group = "ESI") %>%
+        addRasterImage(heatmap_data$L_ESI, colors = custom_green_colors2, opacity = 0.8, group = "Land ESI") %>%
+        addRasterImage(heatmap_data$W_ESI, colors = custom_blue_colors2, opacity = 0.8, group = "Water ESI") %>%
         addLegend(pal = heatmap_colors, values = values(heatmap_data$ESI), title = "ESI", position = "bottomright") %>%
+        addLegend(pal = custom_green_colors, values = (values(heatmap_data$L_ESI)), title = "Land ESI", position = "bottomleft") %>%
+        #addLegend(colors = c("#FFFFFF",  "#F05C42"), labels = c(0, max(values(heatmap_data$C_ESI))), title = "CO2 ESI", position = "topleft") %>%
+        addLegend(pal = custom_blue_colors, values = (values(heatmap_data$W_ESI)), title = "Water ESI", position = "bottomleft") %>%
+        addLayersControl(overlayGroups = c("ESI", "Land ESI", "Water ESI"),
+            options = layersControlOptions(collapsed = FALSE)) %>%
+          hideGroup("Land ESI") %>%
+          hideGroup("Water ESI") %>%
           setView(0,0, zoom = 2)
     }
     
@@ -191,7 +185,7 @@ server <- function(input, output, session) {
     content = function(file) {
       # Get the modified heatmap data (raster) being displayed on the map
       heatmap_data <- heatmap_data_reactive()
-      esi_cdf <- heatmap_data
+      esi_cdf <- heatmap_data[[c("ESI", "W_ESI", "L_ESI", "C_ESI")]]
       # Write the selected ESI raster to a NetCDF file
       terra::writeCDF(esi_cdf, file, overwrite = TRUE)
     }
