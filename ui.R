@@ -139,7 +139,7 @@ ui <- page_navbar(title = HTML("ESI prototype tool"), theme = bs_theme(bootswatc
                                                          nav_panel("Instructions",
                                                                    p("In the input data tab you can insert the data for the assets you want to analyze. The 'clear data' button allows to delete all the input values and start from scratch."),
                                                                    h5("Interpreting ESI scores"),
-                                                                   p("ESI scores are scaled to planetary boundaries. In this table values are scaled so that an ESI score of 1M means that the activity would contribute to shifting one of the variables from their pre-industrial conditions to their planetary boundaries. ESI scores are usually much smaller than 1M, this however does not represent negligible impact."),
+                                                                   p("The ESI score represents the total impact of an activity relative to environmental guardrails. The score can be broken down into three components, each of which represent the contribution of each impact driver (i.e. carbon emissions, land use, and water use) towards the total Earth System Impact. ESI scores are scaled to planetary boundaries. In this table values are scaled so that an ESI score of 1M means that the activity would contribute to shifting one of the variables from their pre-industrial conditions to their planetary boundaries. ESI scores are usually much smaller than 1M, this however does not represent negligible impact."),
                                                                    h5("Errors and clearing data"),
                                                                    p("Note that there are some combinations of region and vegetation type for which there is no value. If you select one of those combinations you will receive an error message, and will need to 'clear data' to start again. The missing combinations are the following:"),
                                                                    tags$div(tags$ul(
@@ -153,7 +153,7 @@ ui <- page_navbar(title = HTML("ESI prototype tool"), theme = bs_theme(bootswatc
                                      #DTOutput("esi_output", style = "height:300px; overflow-y: scroll"),
                                      card(card_header("ESI Breakdown"),
                                           checkboxInput(inputId = "show_carbon_emissions", label = "Show/Hide Carbon Emissions Line", value = FALSE),
-                                          plotOutput("esi_breakdown_plot", height = "50%"),
+                                          plotOutput("esi_breakdown_plot", height = "60%"),
                                           strong("Disclaimer: This tool is currently a prototype. We advise caution when interpreting its results and it should not be used to replace regulatory requirements. Given its focus on planetary-scale impacts it also does not replace assessments of local environmental impacts, such as pollution or biodiversity impacts."))  # Output the plot using plotOutput
                                    ))),
                   ### PANEL 3 - Downloads
