@@ -23,9 +23,9 @@ ui <- page_navbar(title = HTML("ESI prototype tool"), theme = bs_theme(bootswatc
                     padding: 0 50px 0 50px;
                     border: 1px solid red;}
                     
-                          .navbar-nav > li > a.nav-link {
-        margin-right: 1px; /* Adjust spacing as needed */
-      }
+                    .navbar-nav > li > a.nav-link {
+                    margin-right: 1px; /* Adjust spacing as needed */
+                    }
                     
                     .navbar-default {
                     font-family: 'Lato';
@@ -76,15 +76,18 @@ ui <- page_navbar(title = HTML("ESI prototype tool"), theme = bs_theme(bootswatc
                     }
                                     
                     @media (min-width: 768px) {
-        /* Custom CSS to increase padding (side margins) for About and Download nav panels */
-        .nav-content {
-          padding-left: 40px;  /* Increase side margins on the left */
-          padding-right: 40px; /* Increase side margins on the right */
-        }
-                    }
-       @media (min-width: 1200px) {
-       padding-right: 80px; /* Increase the right margin more for large screens */
-        }
+                    /* Custom CSS to increase padding (side margins) for About and Download nav panels */
+                    .nav-content {
+                     padding-left: 40px;  /* Increase side margins on the left */
+                      padding-right: 40px; /* Increase side margins on the right */
+                    }}
+                      @media (min-width: 1200px) {
+                      padding-right: 80px; /* Increase the right margin more for large screens */
+                      }
+                      
+                      #showcase-content {
+                      zoom: 0.9;
+                      }
 
 "
                                   
@@ -110,7 +113,7 @@ ui <- page_navbar(title = HTML("ESI prototype tool"), theme = bs_theme(bootswatc
                                            p(strong("Disclaimer", style="font-size: 20px;"), br(strong("This tool is currently a prototype. We advise caution when interpreting its results and it should not be used to replace regulatory requirements. Given its focus on planetary-scale impacts it also does not replace assessments of local environmental impacts, such as pollution or biodiversity impacts."
                                            )))))),
                   ### PANEL 2 - TOOL
-                  bslib::nav_panel("Showcase", 
+                  bslib::nav_panel("Showcase", div(id = "showcase-content",
                                    ## TOOL PAGE
                                    page_sidebar(
                                      sidebar = sidebar(width = "30%",
@@ -136,8 +139,7 @@ ui <- page_navbar(title = HTML("ESI prototype tool"), theme = bs_theme(bootswatc
                                                          nav_panel("Instructions",
                                                                    p("In the input data tab you can insert the data for the assets you want to analyze. The 'clear data' button allows to delete all the input values and start from scratch."),
                                                                    h5("Interpreting ESI scores"),
-                                                                   p("ESI scores are scaled to planetary boundaries. Since any single company will contribute a small fraction of total regional or global impact relative to these boundaries, ESI scores are usually much smaller than
-1. This small number, however, does not represent negligible impact. In this table, to ease understanding and comparison, ESI scores are displayed as ESI x 10^6"),
+                                                                   p("ESI scores are scaled to planetary boundaries. In this table values are scaled so that an ESI score of 1M means that the activity would contribute to shifting one of the variables from their pre-industrial conditions to their planetary boundaries. ESI scores are usually much smaller than 1M, this however does not represent negligible impact."),
                                                                    h5("Errors and clearing data"),
                                                                    p("Note that there are some combinations of region and vegetation type for which there is no value. If you select one of those combinations you will receive an error message, and will need to 'clear data' to start again. The missing combinations are the following:"),
                                                                    tags$div(tags$ul(
@@ -146,14 +148,14 @@ ui <- page_navbar(title = HTML("ESI prototype tool"), theme = bs_theme(bootswatc
                                                                      tags$li("Oceania AND warm OR cool climate grasslands"),
                                                                      tags$li("Europe AND cool climate grasslands OR tropical forest"))),
                                                                    p("If you encounter any other issues feel free to reach out to giorgio.parlato(at)su.se")))),
-                                     h5("Asset List (ESI scores are displayed as ESI x 10^6)"),
+                                     h5("Asset List"),
                                      column(width = 12, DT::dataTableOutput("esi_output"),style = "height:30%; overflow-y: scroll"),
                                      #DTOutput("esi_output", style = "height:300px; overflow-y: scroll"),
                                      card(card_header("ESI Breakdown"),
                                           checkboxInput(inputId = "show_carbon_emissions", label = "Show/Hide Carbon Emissions Line", value = FALSE),
                                           plotOutput("esi_breakdown_plot", height = "50%"),
                                           strong("Disclaimer: This tool is currently a prototype. We advise caution when interpreting its results and it should not be used to replace regulatory requirements. Given its focus on planetary-scale impacts it also does not replace assessments of local environmental impacts, such as pollution or biodiversity impacts."))  # Output the plot using plotOutput
-                                   )),
+                                   ))),
                   ### PANEL 3 - Downloads
                   bslib::nav_panel("Downloads",
                                    div(class = "container", style = "max-width: 1200px; margin-top: 10px; margin-left: 0;",  # This centers the content and limits the width
@@ -183,14 +185,14 @@ ui <- page_navbar(title = HTML("ESI prototype tool"), theme = bs_theme(bootswatc
                                    fluidPage(
                                      h3("ESI Dynamic Heatmap"),
                                      p("Here you can input data of a hypothetical asset to view how that assets' ESI would vary depending on its location"),
+                                     p("The panel on the bottom left of the map allows you to select the layer displayed in the map. “The ESI layer represents the total impact of an activity relative to environmental guardrails, while the other three layers represent the contribution of each impact driver (i.e. carbon emissions, land use, and water use) towards the total ESI.”"),
                                      hr(),
                                      sidebarLayout(
                                        sidebarPanel(width = 3,
                                                     h5("Input Data for Heatmap"),
                                                     numericInput(inputId = "co2_emissions_map", label = "CO2e Emissions (tons)", value = 0),
                                                     numericInput(inputId = "land_use_map", label = "Land Use (km2)", value = 0),
-                                                    numericInput(inputId = "water_use_map", label = "Water Use (thousand m3)", value = 0),
-                                                    actionButton(inputId = "update_map", label = "Update Map", class="btn btn-primary")
+                                                    numericInput(inputId = "water_use_map", label = "Water Use (thousand m3)", value = 0)
                                        ),
                                        mainPanel(width = 9, 
                                                  h5("Total ESI by location (given inputs)"), 
@@ -200,12 +202,15 @@ ui <- page_navbar(title = HTML("ESI prototype tool"), theme = bs_theme(bootswatc
                                                  downloadButton("download_csv", "Download ASC", class="btn btn-primary"),
                                                  downloadButton("download_tiff", "Download TIFF", class="btn btn-primary"),
                                                  downloadButton("download_netcdf", "Download NetCDF", class="btn btn-primary"),
-                                                 p("All download formats can be read by GIS applications. ASC files are text files that can also be imported in Excel."),
-                                                 p("The NetCDF format includes all four layers (Total ESI, Land ESI, Water ESI, Carbon ESI)"),
+                                                 p(),
+                                                 p("All download formats can be read by GIS applications."),
+                                                 tags$li("ASC files are text files that can also be imported in Excel."),
+                                                 tags$li("TIFF files are image file formats for raster images."),
+                                                 tags$li("The NetCDF format allows storing multidimensional data. In this case the file includes all four layers displayed in the map (Total ESI, Land ESI, Water ESI, Carbon ESI)"),
                                                  hr(),
                                                  p("Notes:"),
                                                  tags$div(tags$ul(
-                                                   tags$li("ESI scores are displayed as ESI x 10^6"),
+                                                   tags$li("ESI scores are scaled to planetary boundaries. In this table values are scaled so that an ESI score of 1M means that the activity would contribute to shifting one of the variables from their pre-industrial conditions to their planetary boundaries. ESI scores are usually much smaller than 1M, this however, does not represent negligible impact."),
                                                    tags$li("ESI scores cannot currently be calculated for areas classified as 'bare land', these areas are thus not colored at all in the heatmap")))
                                        )
                                      )

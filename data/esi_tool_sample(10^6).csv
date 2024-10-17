@@ -1,0 +1,6 @@
+AssetName,VegType,Region,CO2Emissions,WaterUse,LandUse,Carbon_ESI,Water_ESI,Land_ESI,Total_ESI
+Sample Asset 1,cool climate grassland,Africa,720000,7260,139,2.02,3.17,15.7,20.9
+Sample Asset 2,warm climate grassland,North America,447892.4867,22600,14.9,1.25,17.200000000000003,0.986,19.400000000000002
+Sample Asset 3,warm climate grassland,Australia,2256211.686,57500,256,6.319999999999999,1.3599999999999999,6.86,14.5
+Sample Asset 4,tropical forest,South America,509000,15500,118,1.42,0,7.79,9.209999999999999
+Sample Asset 5,temperate forest,Oceania,2670000,1000,4.23,7.48,0.07919999999999999,0.923,8.48
