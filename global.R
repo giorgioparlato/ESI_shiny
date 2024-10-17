@@ -10,7 +10,7 @@ library(terra)
 library(tidyterra)
 
 ## data for tables
-Water_ESI_coefficients <- read_csv("data/Water_ESI_coefficients.csv") %>%
+Water_ESI_matrix <- read_csv("data/Water_ESI_coefficients.csv") %>%
   tibble::column_to_rownames(var = "...1") %>%
   as.matrix() 
 

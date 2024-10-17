@@ -130,8 +130,8 @@ ui <- page_navbar(title = HTML("ESI prototype tool"), theme = bs_theme(bootswatc
                                                                      "warm climate grassland", "boreal forest", "cool climate grassland", "temperate forest", "tropical forest"
                                                                    )),
                                                                    numericInput(inputId = "co2_emissions", label = "CO2e Emissions (tons)", value = ""),
-                                                                   numericInput(inputId = "land_use", label = "Land Use (km2)", value = ""),
                                                                    numericInput(inputId = "water_use", label = "Water Use (thousand m3)", value = ""),
+                                                                   numericInput(inputId = "land_use", label = "Land Use (km2)", value = ""),
                                                                    textInput(inputId = "asset_name", label = "Asset Name", value = "Example Asset 1"),
                                                                    actionButton(inputId = "calculate_esi", label = "Calculate ESI for this asset", class="btn btn-primary"),
                                                                    actionButton(inputId = "clear_data", label = "Clear Data", class="btn btn-secondary")),
