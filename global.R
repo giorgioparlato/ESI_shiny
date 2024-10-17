@@ -14,14 +14,14 @@ Water_ESI_coefficients <- read_csv("data/Water_ESI_coefficients.csv") %>%
   tibble::column_to_rownames(var = "...1") %>%
   as.matrix() 
 
-Land_ESI_matrix <- read_csv("data/Land_ESI_coefficients.csv") %>%
+Land_ESI_matrix <- read_csv("data/Land_ESI_coefficients(not_rounded).csv") %>%
   tibble::column_to_rownames(var = "...1") %>%
   as.matrix()
 
-initial_data <- as.tibble(read_csv("data/esi_tool_sample(10^6).csv"))
+initial_data <- read_csv("data/esi_tool_sample(10^6).csv")
 
 ## data for map
-df_esi_inner <- as_tibble(read_csv("data/df_esi_inner(withc_esi).csv"))
+df_esi_inner <- read_csv("data/df_esi_inner(withc_esi).csv")
 r <- rast(df_esi_inner, crs = "EPSG:4326")
 
 empty_data <- data.frame(
