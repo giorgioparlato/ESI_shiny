@@ -175,7 +175,7 @@ server <- function(input, output, session) {
     }
     if(input$world_map_plot_groups == 'Carbon ESI'){
       my_map <- my_map %>%
-        addLegend(colors = c("#FFFFFF",  "#F05C42"), labels = c(0, max(values(heatmap_data$C_ESI), na.rm = TRUE)), title = "CO2 ESI", position = "bottomright", group = "Carbon ESI")
+        addLegend(colors = c("#FFFFFF",  "#F05C42"), labels = c(0, round(max(values(heatmap_data$C_ESI), na.rm = TRUE), digits = 4)), title = "CO2 ESI", position = "bottomright", group = "Carbon ESI")
     }
   })
   
