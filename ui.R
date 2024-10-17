@@ -185,7 +185,7 @@ ui <- page_navbar(title = HTML("ESI prototype tool"), theme = bs_theme(bootswatc
                                    fluidPage(
                                      h3("ESI Dynamic Heatmap"),
                                      p("Here you can input data of a hypothetical asset to view how that assets' ESI would vary depending on its location"),
-                                     p("The panel on the bottom left of the map allows you to select the layer displayed in the map. “The ESI layer represents the total impact of an activity relative to environmental guardrails, while the other three layers represent the contribution of each impact driver (i.e. carbon emissions, land use, and water use) towards the total ESI.”"),
+                                     p("The panel on the bottom left of the map allows you to select the layer displayed in the map. The ESI layer represents the total impact of an activity relative to environmental guardrails, while the other three layers represent the contribution of each impact driver (i.e. carbon emissions, land use, and water use) towards the total ESI."),
                                      hr(),
                                      sidebarLayout(
                                        sidebarPanel(width = 3,
