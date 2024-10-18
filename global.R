@@ -8,6 +8,7 @@ library(bslib)
 library(leaflet)
 library(terra)
 library(tidyterra)
+library(ncdf4)
 
 ## data for tables
 Water_ESI_matrix <- read_csv("data/Water_ESI_coefficients.csv") %>%

@@ -5,7 +5,7 @@ account: gedb
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 9741170
-bundleId: 9167347
+bundleId: 9240065
 url: https://gedb.shinyapps.io/ESI_showcase/
 version: 1
 asMultiple: FALSE

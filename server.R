@@ -213,7 +213,6 @@ server <- function(input, output, session) {
       # Get the modified heatmap data (raster) being displayed on the map
       heatmap_data <- heatmap_data_reactive()
       esi_cdf <- heatmap_data[[c("ESI", "W_ESI", "L_ESI", "C_ESI")]]
-      names(esi_cdf) <- c("ESI", "W_ESI", "L_ESI", "C_ESI")
       # Write the selected ESI raster to a NetCDF file
       terra::writeCDF(esi_cdf, file, split = TRUE, overwrite = TRUE)
     }
