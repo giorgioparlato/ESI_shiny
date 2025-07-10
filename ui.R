@@ -30,13 +30,21 @@ ui <- page_navbar(title = HTML("ESI prototype tool"), theme = bs_theme(bootswatc
                     .navbar-default {
                     font-family: 'Lato';
                     background-color: #E78059 !important;
-                    border-color: #E78059;}
+                    border-color: #E78059;
+                    color: white;}
                     
                     .navbar-brand {
-                    font-family: 'Lato';}
+                    font-family: 'Lato';
+                    color: white;}
                     
                     .nav-link, .nav-tabs>li>a, .nav-pills>li>a, ul.nav.navbar-nav>li>a {
-                    font-size: 1.25rem}
+                    font-size: 1.25rem;
+                    color: white;}
+                    
+                    .navbar .nav-link:hover,
+                    .navbar .navbar-brand:hover,
+                    .navbar .nav-link.active {
+                    color: #f8f8f8 !important;}
                     
                     .navbar {
                     --bs-navbar-brand-font-size: 1.4rem;}
