@@ -245,7 +245,11 @@ server <- function(input, output, session) {
       addPopups(
         lng = click$lng,
         lat = click$lat,
-        popup = value_text # Leaflet accepts HTML in the popup content
+        popup = value_text, # Leaflet accepts HTML in the popup content
+        options = popupOptions(
+          closeOnClick = FALSE,  # don't close when clicking on map
+          autoClose    = FALSE)
+        #layerId = paste0("popup_", click$lng, "_", click$lat)
       )
   })
 
