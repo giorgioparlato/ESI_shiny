@@ -126,7 +126,12 @@ server <- function(input, output, session) {
       # Blank map when no inputs are provided
       {
       leaflet() %>% 
-        addTiles() %>%
+        #addTiles() %>%
+        addProviderTiles("OpenStreetMap.Mapnik") %>%  # background
+        addProviderTiles("Stadia.StamenTonerLines",    # emphasize boundaries/lines
+                         options = providerTileOptions(opacity = 0.4)) %>%
+        addSearchOSM(searchOptions(zoom = 6, textPlaceholder  = "Search...", 
+                                   marker = list(icon = NULL, animate = TRUE, circle = list(radius = 10, weight = 0, color = "#e03", stroke = FALSE, fill = FALSE)))) %>%
         setMaxBounds(-180, 83.5, 190.2, -85) %>%
         setView(0,0, zoom = 2)
       } 
@@ -134,7 +139,11 @@ server <- function(input, output, session) {
       {
       # Map with data when inputs are provided
       leaflet(heatmap_data) %>%
-          addTiles() %>%
+          addProviderTiles("OpenStreetMap.Mapnik") %>%
+          #addProviderTiles("Stadia.StamenTonerLite") %>%  # background
+          addProviderTiles("Stadia.StamenTonerLines",    # emphasize boundaries/lines
+                           options = providerTileOptions(opacity = 0.4)) %>%
+          addSearchOSM(searchOptions(zoom = 6)) %>%
         addRasterImage(heatmap_data$ESI, colors = heatmap_colors2, opacity = 0.8, group = "ESI") %>%
         addRasterImage(heatmap_data$L_ESI, colors = custom_green_colors2, opacity = 0.8, group = "Land ESI") %>%
         addRasterImage(heatmap_data$W_ESI, colors = custom_blue_colors2, opacity = 0.8, group = "Water ESI") %>%
@@ -156,6 +165,7 @@ server <- function(input, output, session) {
   
   observeEvent(input$world_map_plot_groups, {
     heatmap_data <- heatmap_data_reactive()
+    
     heatmap_colors <- colorNumeric(c("#BFE499", "#F9DF8B", "#f7b267","#f79d65","#f4845f","#f27059","#f25c54", "#F05C42", "#ED3C1D"), values(heatmap_data$ESI),  na.color = "transparent")
     custom_green_colors <- colorNumeric(c("#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#006d2c", "#00441b"), domain = values(heatmap_data$L_ESI),  na.color = "transparent")
     custom_blue_colors <- colorNumeric(c("#86C5DA", "#5DAFD3", "#349ACD", "#1E80B0", "#17679A", "#115085", "#0B3A6F", "#062659", "#021443"), domain = values(heatmap_data$W_ESI),  na.color = "transparent")
@@ -178,7 +188,66 @@ server <- function(input, output, session) {
         addLegend(colors = c("#FFFFFF",  "#F05C42"), labels = c(0, round(max(values(heatmap_data$C_ESI), na.rm = TRUE), digits = 4)), title = "CO2 ESI", position = "bottomright", group = "Carbon ESI")
     }
   })
-  
+
+  observeEvent(input$world_map_plot_click, {
+    click <- input$world_map_plot_click
+    
+    # Ensure necessary data is available
+    req(heatmap_data_reactive(), click) 
+    heatmap_data <- heatmap_data_reactive()
+    
+    # 1. Extract values from the ENTIRE SpatRaster stack
+    # This assumes 'heatmap_data' contains all 4 layers: ESI, C_ESI, L_ESI, W_ESI
+    coords <- matrix(c(click$lng, click$lat), ncol = 2)
+    
+    extracted_value_df <- terra::extract(
+      heatmap_data, # <-- Extracting from the full stack
+      coords,
+      method = 'bilinear' 
+    )
+    
+    print("--- Extracted Value Data Frame ---")
+    print(extracted_value_df)
+    print(paste("Columns:", ncol(extracted_value_df)))
+    
+    # 2. Safely check and format the values
+    
+    # Get the column names (which should be the layer names, e.g., "ESI")
+    col_names <- names(extracted_value_df)
+    
+    # Check if the extraction returned data (columns should be > 1 if an ID column is added, 
+    # but since you found only 1 column when extracting a single layer, we'll check for 
+    # the presence of your data layer names.)
+    # We will assume that if the number of layers in the stack is N, the df will have N columns 
+    # (or N+1 if an ID is present). Since your previous prints showed only 1 column for 1 layer, 
+    # we'll assume the columns correspond directly to the layer order.
+    
+    # Check if the primary ESI value is present (assuming it's the first column)
+    if (ncol(extracted_value_df) >= 1 && !is.na(extracted_value_df[1, 5])) {
+      
+      # Use the layer names to safely access the values
+      # Note: We use HTML <br> for line breaks inside the popup
+      value_text <- paste0(
+        "Total ESI: ", format(extracted_value_df$ESI[1], big.mark = ",", digits = 4), "<br>",
+        "Land ESI: ", format(extracted_value_df$L_ESI[1], big.mark = ",", digits = 4), "<br>",
+        "Water ESI: ", format(extracted_value_df$W_ESI[1], big.mark = ",", digits = 4), "<br>",
+        "Carbon ESI: ", format(extracted_value_df$C_ESI[1], big.mark = ",", digits = 4)
+      )
+      
+    } else {
+      # Fallback for clicks outside the raster extent
+      value_text <- "No ESI data available at this location."
+    }
+    
+    # 3. Show the popup on the map
+    leafletProxy("world_map_plot") %>%
+     # clearPopups() %>% 
+      addPopups(
+        lng = click$lng,
+        lat = click$lat,
+        popup = value_text # Leaflet accepts HTML in the popup content
+      )
+  })
 
   
   # Download CSV
