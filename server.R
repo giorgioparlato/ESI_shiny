@@ -103,7 +103,7 @@ server <- function(input, output, session) {
   heatmap_data_reactive <- reactive({
     req(input$co2_emissions_map, input$land_use_map, input$water_use_map)  # Ensure inputs are available
     
-    r %>%
+    r_3857 %>%
       mutate(
         ESI = 10^6 * ((input$land_use_map * l_esi) + (input$co2_emissions_map * c_esi) + (input$water_use_map * w_esi)),
         L_ESI = 10^6 * ((input$land_use_map * l_esi)),
@@ -120,6 +120,7 @@ server <- function(input, output, session) {
     heatmap_colors <- colorNumeric(c("#BFE499", "#F9DF8B", "#f7b267","#f79d65","#f4845f","#f27059","#f25c54", "#F05C42", "#ED3C1D"), values(heatmap_data$ESI),  na.color = "transparent")
     custom_green_colors <- colorNumeric(c("#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#006d2c", "#00441b"), domain = values(heatmap_data$L_ESI),  na.color = "transparent")
     custom_blue_colors <- colorNumeric(c("#86C5DA", "#5DAFD3", "#349ACD", "#1E80B0", "#17679A", "#115085", "#0B3A6F", "#062659", "#021443"), domain = values(heatmap_data$W_ESI),  na.color = "transparent")
+    veg_colors <- colorFactor(c("#023436","#513C2C","#2a9d8f","#f4a261", "#e9c46a"), domain = 2:6,  na.color = "transparent")
     
     # Check for user inputs
     if (input$co2_emissions_map == 0 && input$land_use_map == 0 && input$water_use_map == 0) 
@@ -133,7 +134,13 @@ server <- function(input, output, session) {
         addSearchOSM(searchOptions(zoom = 6, textPlaceholder  = "Search...", 
                                    marker = list(icon = NULL, animate = TRUE, circle = list(radius = 10, weight = 0, color = "#e03", stroke = FALSE, fill = FALSE)))) %>%
         setMaxBounds(-180, 83.5, 190.2, -85) %>%
-        setView(0,0, zoom = 2)
+        setView(0,0, zoom = 2) %>%
+        addRasterImage(heatmap_data$vegetation, colors = veg_colors, opacity = 0.6, project = FALSE, group = "Vegetation") %>%
+        addLegend(pal = veg_colors, values = 2:6, title = "Vegetation", position = "bottomright", group = "Vegetation",
+                  labFormat = function(type, cuts, p) {
+                    # Map the numeric breaks to your vegetation names
+                    veg_lookup[as.character(cuts)]
+                  })
       } 
     else 
       {
@@ -144,20 +151,22 @@ server <- function(input, output, session) {
           addProviderTiles("Stadia.StamenTonerLines",    # emphasize boundaries/lines
                            options = providerTileOptions(opacity = 0.4)) %>%
           addSearchOSM(searchOptions(zoom = 6)) %>%
-        addRasterImage(heatmap_data$ESI, colors = heatmap_colors2, opacity = 0.8, group = "ESI") %>%
-        addRasterImage(heatmap_data$L_ESI, colors = custom_green_colors2, opacity = 0.8, group = "Land ESI") %>%
-        addRasterImage(heatmap_data$W_ESI, colors = custom_blue_colors2, opacity = 0.8, group = "Water ESI") %>%
-        addRasterImage(heatmap_data$C_ESI, colors = reds, opacity = 0.8, group = "Carbon ESI") %>%
+        addRasterImage(heatmap_data$ESI, colors = heatmap_colors2, opacity = 0.8, project = FALSE, group = "ESI") %>%
+        addRasterImage(heatmap_data$L_ESI, colors = custom_green_colors2, opacity = 0.8, project = FALSE, group = "Land ESI") %>%
+        addRasterImage(heatmap_data$W_ESI, colors = custom_blue_colors2, opacity = 0.8, project = FALSE, group = "Water ESI") %>%
+        addRasterImage(heatmap_data$C_ESI, colors = reds, opacity = 0.8, project = FALSE, group = "Carbon ESI") %>%
+        addRasterImage(heatmap_data$vegetation, colors = veg_colors, opacity = 0.8, project = FALSE, group = "Vegetation") %>%
         addLegend(pal = heatmap_colors, values = values(heatmap_data$ESI), title = "ESI", position = "bottomright", group = "ESI") %>%
         #addLegend(pal = custom_green_colors, values = (values(heatmap_data$L_ESI)), title = "Land ESI", position = "bottomright", group = "Land ESI") %>%
         #addLegend(colors = c("#FFFFFF",  "#F05C42"), labels = c(0, max(values(heatmap_data$C_ESI), na.rm = TRUE)), title = "CO2 ESI", position = "bottomright", group = "Carbon ESI") %>%
         #addLegend(pal = custom_blue_colors, values = (values(heatmap_data$W_ESI)), title = "Water ESI", position = "bottomright", group = "Water ESI") %>%
-        addLayersControl(baseGroups = c("ESI", "Land ESI", "Water ESI", "Carbon ESI"),
+        addLayersControl(baseGroups = c("ESI", "Land ESI", "Water ESI", "Carbon ESI", "Vegetation"),
                          position = "bottomleft", 
             options = layersControlOptions(collapsed = FALSE)) %>%
           hideGroup("Land ESI") %>%
           hideGroup("Water ESI") %>%
           hideGroup("Carbon ESI") %>%
+          hideGroup("Vegetation") %>%
           setView(0,0, zoom = 2)
         
       }
@@ -169,6 +178,7 @@ server <- function(input, output, session) {
     heatmap_colors <- colorNumeric(c("#BFE499", "#F9DF8B", "#f7b267","#f79d65","#f4845f","#f27059","#f25c54", "#F05C42", "#ED3C1D"), values(heatmap_data$ESI),  na.color = "transparent")
     custom_green_colors <- colorNumeric(c("#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#006d2c", "#00441b"), domain = values(heatmap_data$L_ESI),  na.color = "transparent")
     custom_blue_colors <- colorNumeric(c("#86C5DA", "#5DAFD3", "#349ACD", "#1E80B0", "#17679A", "#115085", "#0B3A6F", "#062659", "#021443"), domain = values(heatmap_data$W_ESI),  na.color = "transparent")
+    veg_colors <- colorFactor(c("#023436","#513C2C","#2a9d8f","#f4a261", "#e9c46a"), domain = 2:6,  na.color = "transparent")
     my_map <- leafletProxy("world_map_plot") %>% clearControls()
     
     if (input$world_map_plot_groups == 'ESI'){
@@ -187,10 +197,26 @@ server <- function(input, output, session) {
       my_map <- my_map %>%
         addLegend(colors = c("#FFFFFF",  "#F05C42"), labels = c(0, round(max(values(heatmap_data$C_ESI), na.rm = TRUE), digits = 4)), title = "CO2 ESI", position = "bottomright", group = "Carbon ESI")
     }
+    if(input$world_map_plot_groups == "Vegetation"){
+      my_map <- my_map %>%
+        addLegend(pal = veg_colors, values = 2:6, title = "Vegetation", position = "bottomright", group = "Vegetation",
+                  labFormat = function(type, cuts, p) {
+                    # Map the numeric breaks to your vegetation names
+                    veg_lookup[as.character(cuts)]
+                  })
+    }
   })
 
   observeEvent(input$world_map_plot_click, {
     click <- input$world_map_plot_click
+    
+    
+    # Ensure coordinates are numeric
+    lng <- as.numeric(click$lng)
+    lat <- as.numeric(click$lat)
+    
+    # Only proceed if coordinates are finite
+    req(is.finite(lng), is.finite(lat))
     
     # Ensure necessary data is available
     req(heatmap_data_reactive(), click) 
@@ -199,12 +225,25 @@ server <- function(input, output, session) {
     # 1. Extract values from the ENTIRE SpatRaster stack
     # This assumes 'heatmap_data' contains all 4 layers: ESI, C_ESI, L_ESI, W_ESI
     coords <- matrix(c(click$lng, click$lat), ncol = 2)
+    click_df <- data.frame(x = click$lng, y = click$lat)
+    
+    # Wrap click into a SpatVector
+    click_vect <- terra::vect(click_df, geom = c("x", "y"), crs = "EPSG:4326")
+    
+    # Reproject click to match raster CRS
+    click_3857 <- terra::project(click_vect, crs(heatmap_data))
     
     extracted_value_df <- terra::extract(
       heatmap_data, # <-- Extracting from the full stack
-      coords,
-      method = 'bilinear' 
+      click_3857,
+      method = 'simple' 
     )
+    
+    # Add vegetation label
+    extracted_value_df <- extracted_value_df %>%
+      mutate(
+        vegetation_label = veg_lookup[as.character(vegetation)]
+      )
     
     print("--- Extracted Value Data Frame ---")
     print(extracted_value_df)
@@ -231,7 +270,8 @@ server <- function(input, output, session) {
         "Total ESI: ", format(extracted_value_df$ESI[1], big.mark = ",", digits = 4), "<br>",
         "Land ESI: ", format(extracted_value_df$L_ESI[1], big.mark = ",", digits = 4), "<br>",
         "Water ESI: ", format(extracted_value_df$W_ESI[1], big.mark = ",", digits = 4), "<br>",
-        "Carbon ESI: ", format(extracted_value_df$C_ESI[1], big.mark = ",", digits = 4)
+        "Carbon ESI: ", format(extracted_value_df$C_ESI[1], big.mark = ",", digits = 4), "<br>",
+        "Vegetation: ", extracted_value_df$vegetation_label[1]
       )
       
     } else {

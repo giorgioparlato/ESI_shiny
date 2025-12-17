@@ -23,8 +23,38 @@ Land_ESI_matrix <- read_csv("data/Land_ESI_coefficients(not_rounded).csv") %>%
 initial_data <- read_csv("data/esi_tool_sample(10^6).csv")
 
 ## data for map
-df_esi_inner <- read_csv("data/df_esi_inner(withc_esi).csv")
+df_esi_inner <- read_csv("data/df_esi_inner(withc_esi).csv") %>%
+  mutate(
+    vegetation = case_when(
+      grepl("agriculture", scenario, ignore.case = TRUE) ~ 1,
+      grepl("tropical forest", scenario, ignore.case = TRUE) ~ 2,
+      grepl("temperate forest", scenario, ignore.case = TRUE) ~ 3,
+      grepl("boreal forest", scenario, ignore.case = TRUE) ~ 4,
+      grepl("cool climate grassland", scenario, ignore.case = TRUE) ~ 5,
+      grepl("warm climate grassland", scenario, ignore.case = TRUE) ~ 6,
+      grepl("bare land", scenario, ignore.case = TRUE) ~ 7,
+      TRUE ~ -9999
+    )
+  )
+
+veg_lookup <- c(
+  `1` = "Agriculture",
+  `2` = "Tropical forest",
+  `3` = "Temperate forest",
+  `4` = "Boreal forest",
+  `5` = "Cool climate grassland",
+  `6` = "Warm climate grassland",
+  `7` = "Bare land",
+  `-9999` = "Other"
+)
+
 r <- rast(df_esi_inner, crs = "EPSG:4326")
+
+r_3857 <- terra::project(
+  r,
+  "EPSG:3857",
+  method = "near"   # or "bilinear" for continuous layers
+)
 
 
 empty_data <- data.frame(
